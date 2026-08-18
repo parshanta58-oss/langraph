@@ -13,7 +13,6 @@ from langchain_groq import ChatGroq
 
 llm=ChatGroq(model="openai/gpt-oss-120b", api_key="")
 
-
 def editor_node(state:pipelinestate)->dict:
     """Stage 1: cleans up grammer ,remove typos and refines the tone."""
 
@@ -32,6 +31,7 @@ def editor_node(state:pipelinestate)->dict:
 
 def script_node(state:pipelinestate)->dict:
     """Stage 2 :Format the clean text into an engaging video script style."""
+    
     print("\n---[stage 2] Executing ScriptWriter Node ---")
 
     prompt=(
