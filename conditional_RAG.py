@@ -9,7 +9,12 @@ from langchain_community.vectorstores import FAISS
 from dotenv import load_dotenv
 load_dotenv()
 
+
+# STEP 1 -->  LOADING ALL THE NECESSARY LIBRARIES
+
 # LOADERS --> TEXT SPLITTER --> EMBEDDING --> VECTOR STORES --> RETIEVER -->LLM
+
+# STEP 2 -->  BUILDING RAG PIPELINE FOR ACADEMIC AND FEE RELATED THING
 
 embedding=HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
@@ -29,15 +34,13 @@ def build_retriever(pdf_path:str):
 academic_retriver=build_retriever("academics_handbook.pdf")
 fee_retriever=build_retriever("fee_structure.pdf")
 
+# STEP 3 --> CREATING LLM MODEL 
 
 llm=ChatGroq(
     model="openai/gpt-oss-120b", api_key=""
 )
 
-# state
-
-
-# Loader --> text_splitter --> embeddings-->vector stores --> retriever-->llm
+# STEP 4 --> CREATING STATE
 
 class pipeline(TypedDict):
     programme:str
@@ -45,6 +48,11 @@ class pipeline(TypedDict):
     query_type:str
     retrieved_context:str
 
+# STEP 4 --> CREATING NODES
+
+
+# Creating classifier node which specifies the category of query weather it is Academic, fee, general ? 
+# and that will be stroed it in state that is last_message
 
 def classifier_node(state:pipeline)->dict:
     """Look at the latest user message and decide which path to take."""
@@ -65,6 +73,7 @@ def classifier_node(state:pipeline)->dict:
         "Return only one word: academic, fee, or general."
     )
 
+    
     response=llm.invoke(prompt)
     category=response.content.strip().lower()
 
@@ -198,13 +207,6 @@ while True:
     })
 
     print(f"Assistant:{result['message'][-1].content}")
-
-
-
-
-
-
-
 
 
 
